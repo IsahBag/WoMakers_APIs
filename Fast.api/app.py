@@ -60,7 +60,21 @@ async def remove_user(id: UUID):
         if user.id == id:
             db.remove(user)
             return
-        raise HTTPException(
-            status_code=404,
-            detail=f"Usuário com o id {id} não encontrado!"
-        )
+    raise HTTPException(
+        status_code=404,
+        detail=f"Usuário com o id {id} não encontrado!"
+    )
+    
+@app.put("/api/users/{id}")
+async def update_user(id: UUID, updated_user: User):
+    for user in db:
+        if user.id == id:
+            user.first_name = updated_user.first_name
+            user.last_name = updated_user.last_name
+            user.email = updated_user.email
+            user.role = updated_user.role
+            return {"message": "Usuário atualizado com sucesso"}
+    raise HTTPException(
+        status_code=404,
+        detail=f"Usuário com o id {id} não encontrado!"
+    )

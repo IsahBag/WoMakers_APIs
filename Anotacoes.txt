@@ -47,7 +47,7 @@ Instalando o Flask no VS Code:
   pip install Flask
 
 Executando a função:
-flask --app app run
+flask --app [nome_app] run
 
 Componentização: layout padrão
 
@@ -64,10 +64,12 @@ Instalando o Fast API no VS Code:
 2.Ativar o ambiente virtual:
   .\.venv\Scripts\activate
 3.Instalação do Flask
-  pip install "fastapi[all]"	
+  pip install "fastapi[all]"
+4.Instalação do Uvicorn
+  pip install uvicorn
 
 Inicialização do servidor:
-uvicorn [nomeapp]:app --reload
+uvicorn [nome_app]:app --reload
 
 #from typing import Union    #ajuda a trabalhar com funções 
 com único argumento, o qual pode ser de mais de um tipo
