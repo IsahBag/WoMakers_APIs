@@ -39,3 +39,45 @@ def get_list_characters():
         characters.append(character)
     
     return {"characters": characters}
+
+@app.route("/episodes")  
+
+def get_list_episodes_page():
+    url = "https://rickandmortyapi.com/api/episode" 
+    response = urllib.request.urlopen(url)  
+    episodes = response.read()  
+    dict = json.loads(episodes) 
+
+    return render_template("episodes.html", episodes = dict["results"]) 
+
+
+@app.route("/listepisodes")
+
+def get_episodes():
+    url = "https://rickandmortyapi.com/api/episode"
+    response = urllib.request.urlopen(url) 
+    episodes = response.read() 
+    dict = json.loads(episodes) 
+    episodes = [] 
+    
+    for episode in dict["results"]: 
+        episode = {  
+            "episode":episode["episode"],
+            "name":episode["name"],
+            "air_date":episode["air_date"],
+            "id":episode["id"]
+        }        
+        episodes.append(episode) 
+
+    return {"episodes":episodes} 
+
+
+@app.route("/episode/<id>") 
+
+def get_episode(id):
+    url = f"https://rickandmortyapi.com/api/episode/{id}"
+    response = urllib.request.urlopen(url) 
+    data = response.read(); 
+    episode_dict = json.loads(data)
+    
+    return render_template("episode.html", episode=episode_dict) 
