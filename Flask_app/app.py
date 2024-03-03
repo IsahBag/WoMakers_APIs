@@ -40,44 +40,34 @@ def get_list_characters():
     
     return {"characters": characters}
 
-@app.route("/episodes")  
-
+@app.route("/episodes")
 def get_list_episodes_page():
-    url = "https://rickandmortyapi.com/api/episode" 
-    response = urllib.request.urlopen(url)  
-    episodes = response.read()  
-    dict = json.loads(episodes) 
+    all_episodes = [] 
 
-    return render_template("episodes.html", episodes = dict["results"]) 
+    for page in range(1, 4):  
+        url = f"https://rickandmortyapi.com/api/episode?page={page}" 
+        response = urllib.request.urlopen(url) 
+        episodes = response.read() 
+        dict = json.loads(episodes) 
+        all_episodes.extend(dict["results"])    
 
-
-@app.route("/listepisodes")
-
-def get_episodes():
-    url = "https://rickandmortyapi.com/api/episode"
-    response = urllib.request.urlopen(url) 
-    episodes = response.read() 
-    dict = json.loads(episodes) 
-    episodes = [] 
-    
-    for episode in dict["results"]: 
-        episode = {  
-            "episode":episode["episode"],
-            "name":episode["name"],
-            "air_date":episode["air_date"],
-            "id":episode["id"]
-        }        
-        episodes.append(episode) 
-
-    return {"episodes":episodes} 
+    return render_template("episodes.html", episodes=all_episodes)
 
 
-@app.route("/episode/<id>") 
-
-def get_episode(id):
+@app.route("/episode/<id>")
+def get_profile_episode(id):
     url = f"https://rickandmortyapi.com/api/episode/{id}"
     response = urllib.request.urlopen(url) 
-    data = response.read(); 
-    episode_dict = json.loads(data)
+    data = response.read() 
+    episode_data = json.loads(data)    
+
+    characters = []
+    for character_url in episode_data["characters"]:
+        response = urllib.request.urlopen(character_url)
+        character_data = json.loads(response.read())
+        characters.append({
+            "id": character_data["id"],
+            "name": character_data["name"]
+        })
     
-    return render_template("episode.html", episode=episode_dict) 
+    return render_template("episode.html", episode=episode_data, characters=characters)
